@@ -1,0 +1,274 @@
+routes:
+  # Auth Service
+  - id: auth-login
+    path: /api/v1/auth/login
+    methods: [POST]
+    service_name: auth-service
+    service_url: "http://auth-service:8081"
+    strip_prefix: /api/v1
+    timeout: 10s
+    auth_required: false
+    rate_limit:
+      rps: 50
+      burst: 100
+
+  - id: auth-logout
+    path: /api/v1/auth/logout
+    methods: [POST]
+    service_name: auth-service
+    service_url: "http://auth-service:8081"
+    strip_prefix: /api/v1
+    timeout: 10s
+    auth_required: true
+
+  - id: auth-refresh
+    path: /api/v1/auth/refresh
+    methods: [POST]
+    service_name: auth-service
+    service_url: "http://auth-service:8081"
+    strip_prefix: /api/v1
+    timeout: 10s
+    auth_required: false
+    rate_limit:
+      rps: 30
+      burst: 60
+
+  - id: auth-jwks
+    path: /jwks
+    methods: [GET]
+    service_name: auth-service
+    service_url: "http://auth-service:8081"
+    timeout: 5s
+    auth_required: false
+
+  # User Service
+  - id: user-profile-get
+    path: /api/v1/users/{userID}
+    methods: [GET]
+    service_name: user-service
+    service_url: "http://user-service:8082"
+    strip_prefix: /api/v1
+    timeout: 15s
+    auth_required: true
+    rate_limit:
+      rps: 200
+      burst: 400
+
+  - id: user-profile-update
+    path: /api/v1/users/{userID}
+    methods: [PUT, PATCH]
+    service_name: user-service
+    service_url: "http://user-service:8082"
+    strip_prefix: /api/v1
+    timeout: 20s
+    auth_required: true
+    rate_limit:
+      rps: 50
+      burst: 100
+
+  - id: user-profile-delete
+    path: /api/v1/users/{userID}
+    methods: [DELETE]
+    service_name: user-service
+    service_url: "http://user-service:8082"
+    strip_prefix: /api/v1
+    timeout: 20s
+    auth_required: true
+    rate_limit:
+      rps: 10
+      burst: 20
+
+  - id: user-search
+    path: /api/v1/users/search
+    methods: [GET]
+    service_name: user-service
+    service_url: "http://user-service:8082"
+    strip_prefix: /api/v1
+    timeout: 15s
+    auth_required: true
+    rate_limit:
+      rps: 100
+      burst: 200
+
+  # Feed Service
+  - id: feed-get
+    path: /api/v1/feed
+    methods: [GET]
+    service_name: feed-service
+    service_url: "http://feed-service:8083"
+    strip_prefix: /api/v1
+    timeout: 20s
+    auth_required: true
+    rate_limit:
+      rps: 200
+      burst: 500
+    circuit_breaker:
+      threshold: 10
+      timeout: 60s
+      max_half_open: 3
+
+  - id: feed-post-create
+    path: /api/v1/feed/posts
+    methods: [POST]
+    service_name: feed-service
+    service_url: "http://feed-service:8083"
+    strip_prefix: /api/v1
+    timeout: 30s
+    auth_required: true
+    rate_limit:
+      rps: 20
+      burst: 40
+
+  - id: feed-post-get
+    path: /api/v1/feed/posts/{postID}
+    methods: [GET]
+    service_name: feed-service
+    service_url: "http://feed-service:8083"
+    strip_prefix: /api/v1
+    timeout: 15s
+    auth_required: false
+
+  - id: feed-post-update
+    path: /api/v1/feed/posts/{postID}
+    methods: [PUT, PATCH]
+    service_name: feed-service
+    service_url: "http://feed-service:8083"
+    strip_prefix: /api/v1
+    timeout: 20s
+    auth_required: true
+
+  - id: feed-post-delete
+    path: /api/v1/feed/posts/{postID}
+    methods: [DELETE]
+    service_name: feed-service
+    service_url: "http://feed-service:8083"
+    strip_prefix: /api/v1
+    timeout: 15s
+    auth_required: true
+
+  # Notification Service
+  - id: notifications-list
+    path: /api/v1/notifications
+    methods: [GET]
+    service_name: notification-service
+    service_url: "http://notification-service:8084"
+    strip_prefix: /api/v1
+    timeout: 15s
+    auth_required: true
+    rate_limit:
+      rps: 100
+      burst: 200
+
+  - id: notifications-mark-read
+    path: /api/v1/notifications/{notifID}/read
+    methods: [POST]
+    service_name: notification-service
+    service_url: "http://notification-service:8084"
+    strip_prefix: /api/v1
+    timeout: 10s
+    auth_required: true
+
+  # Messaging Service
+  - id: messages-conversations
+    path: /api/v1/messages/conversations
+    methods: [GET]
+    service_name: messaging-service
+    service_url: "http://messaging-service:8085"
+    strip_prefix: /api/v1
+    timeout: 15s
+    auth_required: true
+    rate_limit:
+      rps: 100
+      burst: 200
+
+  - id: messages-send
+    path: /api/v1/messages
+    methods: [POST]
+    service_name: messaging-service
+    service_url: "http://messaging-service:8085"
+    strip_prefix: /api/v1
+    timeout: 15s
+    auth_required: true
+    rate_limit:
+      rps: 50
+      burst: 100
+
+  # Ad Event Receiver
+  - id: ad-events
+    path: /api/v1/ads/events
+    methods: [POST]
+    service_name: ad-event-receiver
+    service_url: "http://ad-event-receiver:8086"
+    strip_prefix: /api/v1
+    timeout: 5s
+    auth_required: false
+    rate_limit:
+      rps: 5000
+      burst: 10000
+    circuit_breaker:
+      threshold: 20
+      timeout: 10s
+      max_half_open: 5
+
+  - id: ad-campaigns
+    path: /api/v1/ads/campaigns
+    methods: [GET, POST]
+    service_name: ad-service
+    service_url: "http://ad-service:8087"
+    strip_prefix: /api/v1
+    timeout: 20s
+    auth_required: true
+
+  # Search Service
+  - id: search
+    path: /api/v1/search
+    methods: [GET]
+    service_name: search-service
+    service_url: "http://search-service:8088"
+    strip_prefix: /api/v1
+    timeout: 20s
+    auth_required: false
+    rate_limit:
+      rps: 500
+      burst: 1000
+    circuit_breaker:
+      threshold: 8
+      timeout: 45s
+      max_half_open: 3
+
+  # Media Service
+  - id: media-upload
+    path: /api/v1/media/upload
+    methods: [POST]
+    service_name: media-service
+    service_url: "http://media-service:8089"
+    strip_prefix: /api/v1
+    timeout: 120s
+    auth_required: true
+    rate_limit:
+      rps: 10
+      burst: 20
+
+  - id: media-get
+    path: /api/v1/media/{mediaID}
+    methods: [GET]
+    service_name: media-service
+    service_url: "http://media-service:8089"
+    strip_prefix: /api/v1
+    timeout: 30s
+    auth_required: false
+
+  # Health endpoint (no auth, no rate limit)
+  - id: health
+    path: /health
+    methods: [GET]
+    service_name: gateway
+    timeout: 5s
+    auth_required: false
+
+  - id: metrics
+    path: /metrics
+    methods: [GET]
+    service_name: gateway
+    timeout: 5s
+    auth_required: false
