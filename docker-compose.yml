@@ -1,0 +1,89 @@
+version: "3.9"
+
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    environment:
+      - GATEWAY_ENV=development
+      - REDIS_ADDR=redis:6379
+      - AUTH_SERVICE_URL=http://auth-service:8081
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+    volumes:
+      - ./config:/config:ro
+    depends_on:
+      redis:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "/gateway", "-health-check"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - gateway-net
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - gateway-net
+
+  auth-service:
+    image: nginx:alpine
+    ports:
+      - "8081:80"
+    volumes:
+      - ./scripts/mock-auth:/usr/share/nginx/html:ro
+    networks:
+      - gateway-net
+
+  user-service:
+    image: nginx:alpine
+    ports:
+      - "8082:80"
+    networks:
+      - gateway-net
+
+  feed-service:
+    image: nginx:alpine
+    ports:
+      - "8083:80"
+    networks:
+      - gateway-net
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    networks:
+      - gateway-net
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./scripts/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - gateway-net
+
+networks:
+  gateway-net:
+    driver: bridge

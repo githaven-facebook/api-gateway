@@ -1,0 +1,81 @@
+run:
+  timeout: 5m
+  go: "1.22"
+  modules-download-mode: readonly
+
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - gofmt
+    - goimports
+    - misspell
+    - revive
+    - gosec
+    - bodyclose
+    - contextcheck
+    - noctx
+    - exhaustive
+    - godot
+    - gocritic
+    - cyclop
+    - dupl
+    - funlen
+    - gocognit
+    - nestif
+    - prealloc
+    - unconvert
+    - unparam
+    - whitespace
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+  gofmt:
+    simplify: true
+  goimports:
+    local-prefixes: github.com/nicedavid98/api-gateway
+  govet:
+    enable-all: true
+  revive:
+    rules:
+      - name: exported
+        severity: warning
+      - name: error-return
+      - name: error-naming
+      - name: if-return
+      - name: var-naming
+  gosec:
+    excludes:
+      - G115
+  cyclop:
+    max-complexity: 15
+  funlen:
+    lines: 100
+    statements: 60
+  gocognit:
+    min-complexity: 20
+  dupl:
+    threshold: 150
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - dupl
+        - funlen
+        - gocognit
+        - gosec
+    - path: tests/
+      linters:
+        - dupl
+        - funlen
+        - gocognit
+        - gosec
+  max-issues-per-linter: 50
+  max-same-issues: 10
