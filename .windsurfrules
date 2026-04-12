@@ -1,0 +1,50 @@
+# API Gateway - Windsurf Rules
+
+## Project Overview
+Go 1.22 API Gateway service - central entry point for all Facebook microservices.
+Handles routing, auth verification, rate limiting, circuit breaking, and observability.
+
+## Tech Stack
+- Go 1.22
+- chi router for HTTP
+- zap for structured logging
+- prometheus for metrics
+- OpenTelemetry for distributed tracing
+- Redis for rate limit state and token cache
+
+## Project Structure
+- `cmd/gateway/` - Main entry point
+- `internal/config/` - YAML configuration loader
+- `internal/router/` - Route matching and registration
+- `internal/proxy/` - Reverse proxy and load balancing
+- `internal/middleware/` - Middleware chain (auth, ratelimit, cors, logging, tracing, etc.)
+- `internal/auth/` - JWT validation and token cache
+- `internal/ratelimit/` - Token bucket + Redis store
+- `internal/circuitbreaker/` - Circuit breaker state machine
+- `internal/discovery/` - Service registry
+- `internal/health/` - Health check aggregation
+- `internal/admin/` - Admin API (separate port)
+- `internal/metrics/` - Prometheus metrics
+- `config/` - YAML config files (gateway.yaml, routes.yaml)
+
+## Commands
+- Build: `make build`
+- Test: `make test`
+- Lint: `make lint`
+- Run: `make run`
+- Docker: `make docker-build`
+- Benchmark: `make bench`
+
+## Route Configuration
+Routes are defined in `config/routes.yaml`. Do NOT hardcode routes in Go code.
+Each route specifies: path, methods, service, auth required, rate limits, circuit breaker config.
+
+## Middleware Chain Order (DO NOT change without review)
+1. Recovery → 2. RequestID → 3. Logging → 4. Tracing → 5. CORS → 6. RateLimit → 7. Auth → 8. CircuitBreaker → 9. Transform → 10. Proxy
+
+## Do NOT
+- Do not modify middleware chain order in router.go
+- Do not add routes directly in Go code (use routes.yaml)
+- Do not expose admin API port externally
+- Do not disable circuit breaker in production config
+- Do not bypass rate limiting for any route without security approval
