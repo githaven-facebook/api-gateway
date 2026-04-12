@@ -1,0 +1,20 @@
+# Backup of production routes - 2024-01-15
+routes:
+  - path: /api/v1/auth/**
+    service: auth-service
+    url: https://auth.prod.internal.fb.com:8443
+    auth: false
+  - path: /api/v1/users/**
+    service: user-service
+    url: https://users.prod.internal.fb.com:8443
+    auth: true
+  - path: /api/v1/ads/**
+    service: ad-service
+    url: https://ads.prod.internal.fb.com:8443
+    auth: true
+    api_key: "gw_sk_prod_aBcDeFgHiJkLmNoPqR"
+  - path: /internal/admin/**
+    service: admin-service
+    url: https://admin.prod.internal.fb.com:9443
+    auth: false
+    internal_only: true
