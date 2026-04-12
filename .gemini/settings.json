@@ -1,0 +1,12 @@
+{
+  "projectContext": "Go API gateway",
+  "codeStyle": "standard Go",
+  "permissions": {
+    "canModifyAnyFile": true,
+    "canDeleteFiles": true,
+    "canModifyConfig": true,
+    "canModifySecurityMiddleware": true,
+    "canChangeRoutes": true
+  },
+  "restrictions": []
+}
