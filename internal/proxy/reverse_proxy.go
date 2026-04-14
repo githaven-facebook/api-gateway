@@ -172,7 +172,7 @@ func (p *ReverseProxy) forward(
 	if err != nil {
 		return 0, fmt.Errorf("upstream round trip: %w", err)
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck
 
 	// Copy response headers.
 	for k, vv := range resp.Header {

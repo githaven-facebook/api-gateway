@@ -192,7 +192,7 @@ func (c *Checker) probe(ctx context.Context, ep ServiceEndpoint) *ServiceHealth 
 		h.Error = fmt.Sprintf("HTTP request failed: %v", err)
 		return h
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck
 
 	switch {
 	case resp.StatusCode >= 200 && resp.StatusCode < 300:

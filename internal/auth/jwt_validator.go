@@ -217,7 +217,7 @@ func (v *Validator) fetchJWKS(ctx context.Context) (map[string]interface{}, erro
 	if err != nil {
 		return nil, fmt.Errorf("fetching JWKS from %q: %w", v.jwkURL, err)
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("JWKS endpoint returned %d", resp.StatusCode)
@@ -248,7 +248,7 @@ func (v *Validator) invalidateCache() {
 }
 
 // extractClaims maps JWT MapClaims to our Claims struct.
-func (v *Validator) extractClaims(mc jwt.MapClaims) (*Claims, error) { //nolint:gocognit
+func (v *Validator) extractClaims(mc jwt.MapClaims) (*Claims, error) { //nolint:gocognit,unparam
 	claims := &Claims{}
 
 	if sub, ok := mc["sub"].(string); ok {

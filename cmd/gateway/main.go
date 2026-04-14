@@ -46,7 +46,7 @@ func main() {
 	}
 }
 
-func run() error { //nolint:funlen
+func run() error { //nolint:funlen,cyclop
 	configPath := flag.String("config", "config/gateway.yaml", "path to gateway config file")
 	routesPath := flag.String("routes", "config/routes.yaml", "path to routes config file")
 	healthCheck := flag.Bool("health-check", false, "perform a health check and exit")
