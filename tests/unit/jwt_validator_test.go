@@ -131,7 +131,10 @@ func TestJWTValidator(t *testing.T) {
 		{
 			name: "invalid signature",
 			token: func() string {
-				otherKey, _ := rsa.GenerateKey(rand.Reader, 2048)
+				otherKey, err := rsa.GenerateKey(rand.Reader, 2048)
+				if err != nil {
+					t.Fatalf("generating other RSA key: %v", err)
+				}
 				return makeToken(validClaims, otherKey)
 			},
 			wantErr: true,

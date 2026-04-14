@@ -172,7 +172,10 @@ func (h *Handler) listServices(w http.ResponseWriter, r *http.Request) {
 
 		services := make([]serviceInfo, 0, len(names))
 		for _, name := range names {
-			instances, _ := h.registry.GetInstances(r.Context(), name)
+			instances, err := h.registry.GetInstances(r.Context(), name)
+			if err != nil {
+				h.logger.Warn("failed to get instances for service", zap.String("service", name), zap.Error(err))
+			}
 			services = append(services, serviceInfo{
 				Name:      name,
 				Instances: len(instances),
