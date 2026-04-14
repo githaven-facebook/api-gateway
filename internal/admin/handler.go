@@ -18,11 +18,11 @@ import (
 
 // Handler implements the admin API endpoints on a separate port.
 type Handler struct {
-	router     *router.Router
-	registry   discovery.ServiceRegistry
-	cbManager  *circuitbreaker.Manager
-	checker    *health.Checker
-	logger     *zap.Logger
+	router       *router.Router
+	registry     discovery.ServiceRegistry
+	cbManager    *circuitbreaker.Manager
+	checker      *health.Checker
+	logger       *zap.Logger
 	proxyHandler http.HandlerFunc
 }
 
@@ -200,11 +200,11 @@ func (h *Handler) listCircuitBreakers(w http.ResponseWriter, _ *http.Request) {
 	breakers := h.cbManager.All()
 
 	type breakerInfo struct {
-		Service             string `json:"service"`
-		State               string `json:"state"`
-		ConsecutiveFailures uint32 `json:"consecutive_failures"`
+		Service              string `json:"service"`
+		State                string `json:"state"`
+		ConsecutiveFailures  uint32 `json:"consecutive_failures"`
 		ConsecutiveSuccesses uint32 `json:"consecutive_successes"`
-		TotalRequests       uint32 `json:"total_requests"`
+		TotalRequests        uint32 `json:"total_requests"`
 	}
 
 	result := make([]breakerInfo, 0, len(breakers))

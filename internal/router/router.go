@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/go-chi/chi/v5"
+
 	"github.com/nicedavid98/api-gateway/internal/config"
 )
 
@@ -123,10 +124,10 @@ func (r *Router) registerChi(route Route, handler http.HandlerFunc) {
 	}
 
 	for _, method := range methods {
-		method := strings.ToUpper(method)
+		upperMethod := strings.ToUpper(method)
 		path := route.Path
 
-		r.mux.Method(method, path, http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		r.mux.Method(upperMethod, path, http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 			// Attach route to request context for downstream middleware.
 			ctx := WithRoute(req.Context(), &route)
 			handler(w, req.WithContext(ctx))

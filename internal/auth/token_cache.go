@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	tokenCachePrefix    = "gw:token:valid:"
-	blacklistPrefix     = "gw:token:blacklist:"
+	tokenCachePrefix     = "gw:token:valid:"
+	blacklistPrefix      = "gw:token:blacklist:"
 	defaultTokenCacheTTL = 5 * time.Minute
 )
 

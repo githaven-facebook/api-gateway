@@ -39,16 +39,16 @@ type ServiceHealth struct {
 
 // AggregateHealth represents the overall gateway health.
 type AggregateHealth struct {
-	Status   Status                    `json:"status"`
-	Services map[string]*ServiceHealth `json:"services"`
-	CheckedAt time.Time               `json:"checked_at"`
+	Status    Status                    `json:"status"`
+	Services  map[string]*ServiceHealth `json:"services"`
+	CheckedAt time.Time                 `json:"checked_at"`
 }
 
 // ServiceEndpoint defines a downstream service and its health endpoint.
 type ServiceEndpoint struct {
-	Name        string
-	HealthURL   string
-	Timeout     time.Duration
+	Name      string
+	HealthURL string
+	Timeout   time.Duration
 }
 
 // cachedResult holds a cached health result with expiry.
@@ -63,8 +63,8 @@ type Checker struct {
 	endpoints []ServiceEndpoint
 	logger    *zap.Logger
 
-	mu      sync.RWMutex
-	cache   map[string]*cachedResult
+	mu       sync.RWMutex
+	cache    map[string]*cachedResult
 	cacheTTL time.Duration
 }
 
@@ -124,6 +124,8 @@ func (c *Checker) CheckAll(ctx context.Context) *AggregateHealth {
 			unhealthyCount++
 		case StatusDegraded:
 			degradedCount++
+		case StatusHealthy, StatusUnknown:
+			// no action needed.
 		}
 	}
 

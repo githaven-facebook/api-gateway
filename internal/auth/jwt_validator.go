@@ -248,7 +248,7 @@ func (v *Validator) invalidateCache() {
 }
 
 // extractClaims maps JWT MapClaims to our Claims struct.
-func (v *Validator) extractClaims(mc jwt.MapClaims) (*Claims, error) {
+func (v *Validator) extractClaims(mc jwt.MapClaims) (*Claims, error) { //nolint:gocognit
 	claims := &Claims{}
 
 	if sub, ok := mc["sub"].(string); ok {

@@ -28,7 +28,7 @@ func Recovery(logger *zap.Logger) func(http.Handler) http.Handler {
 					)
 					w.Header().Set("Content-Type", "application/json")
 					w.WriteHeader(http.StatusInternalServerError)
-					fmt.Fprint(w, `{"error":"internal server error"}`)
+					fmt.Fprint(w, `{"error":"internal server error"}`) //nolint:errcheck
 				}
 			}()
 			next.ServeHTTP(w, r)

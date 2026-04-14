@@ -31,9 +31,9 @@ type ServerConfig struct {
 
 // AuthConfig holds JWT authentication settings.
 type AuthConfig struct {
-	JWKURL    string   `yaml:"jwk_url"`
-	Issuer    string   `yaml:"issuer"`
-	Audiences []string `yaml:"audiences"`
+	JWKURL    string        `yaml:"jwk_url"`
+	Issuer    string        `yaml:"issuer"`
+	Audiences []string      `yaml:"audiences"`
 	CacheTTL  time.Duration `yaml:"cache_ttl"`
 }
 
@@ -56,10 +56,10 @@ type CircuitBreakerConfig struct {
 
 // TracingConfig holds OpenTelemetry tracing settings.
 type TracingConfig struct {
-	Enabled    bool    `yaml:"enabled"`
-	Endpoint   string  `yaml:"endpoint"`
-	SampleRate float64 `yaml:"sample_rate"`
-	ServiceName string `yaml:"service_name"`
+	Enabled     bool    `yaml:"enabled"`
+	Endpoint    string  `yaml:"endpoint"`
+	SampleRate  float64 `yaml:"sample_rate"`
+	ServiceName string  `yaml:"service_name"`
 }
 
 // RouteConfig defines a single route in the gateway configuration.
@@ -93,11 +93,11 @@ type RouteCBConfig struct {
 
 // TransformConfig defines request/response transformation rules.
 type TransformConfig struct {
-	AddRequestHeaders    map[string]string `yaml:"add_request_headers,omitempty"`
-	RemoveRequestHeaders []string          `yaml:"remove_request_headers,omitempty"`
-	AddResponseHeaders   map[string]string `yaml:"add_response_headers,omitempty"`
-	RemoveResponseHeaders []string         `yaml:"remove_response_headers,omitempty"`
-	RewritePath          string            `yaml:"rewrite_path,omitempty"`
+	AddRequestHeaders     map[string]string `yaml:"add_request_headers,omitempty"`
+	RemoveRequestHeaders  []string          `yaml:"remove_request_headers,omitempty"`
+	AddResponseHeaders    map[string]string `yaml:"add_response_headers,omitempty"`
+	RemoveResponseHeaders []string          `yaml:"remove_response_headers,omitempty"`
+	RewritePath           string            `yaml:"rewrite_path,omitempty"`
 }
 
 // Load reads and parses the gateway configuration from a YAML file.

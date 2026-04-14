@@ -46,7 +46,7 @@ func main() {
 	}
 }
 
-func run() error {
+func run() error { //nolint:funlen
 	configPath := flag.String("config", "config/gateway.yaml", "path to gateway config file")
 	routesPath := flag.String("routes", "config/routes.yaml", "path to routes config file")
 	healthCheck := flag.Bool("health-check", false, "perform a health check and exit")
@@ -60,8 +60,7 @@ func run() error {
 
 	// Load routes from separate file if gateway.yaml doesn't embed them.
 	if len(cfg.Routes) == 0 {
-		routesCfg, err := config.Load(*routesPath)
-		if err == nil {
+		if routesCfg, loadErr := config.Load(*routesPath); loadErr == nil {
 			cfg.Routes = routesCfg.Routes
 		}
 	}
@@ -98,7 +97,7 @@ func run() error {
 		Addr:     cfg.RateLimit.RedisAddr,
 		Password: cfg.RateLimit.RedisPass,
 	})
-	defer redisClient.Close()
+	defer redisClient.Close() //nolint:errcheck
 
 	pingCtx, pingCancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer pingCancel()
@@ -164,7 +163,7 @@ func run() error {
 	gRouter.Mux().Get("/health", func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		fmt.Fprint(w, `{"status":"ok"}`)
+		fmt.Fprint(w, `{"status":"ok"}`) //nolint:errcheck
 	})
 	gRouter.Mux().Handle("/metrics", metrics.Handler())
 
@@ -375,7 +374,7 @@ func populateRegistry(reg *discovery.StaticRegistry, routes []config.RouteConfig
 // buildHealthEndpoints creates health check endpoints from route configuration.
 func buildHealthEndpoints(routes []config.RouteConfig) []health.ServiceEndpoint {
 	seen := make(map[string]bool)
-	var endpoints []health.ServiceEndpoint
+	endpoints := make([]health.ServiceEndpoint, 0, len(routes))
 
 	for _, rc := range routes {
 		if rc.ServiceURL == "" || seen[rc.ServiceName] || rc.ServiceName == "gateway" {
@@ -399,7 +398,7 @@ func performHealthCheck(cfg *config.Config) error {
 	if err != nil {
 		return fmt.Errorf("health check failed: %w", err)
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("health check returned %d", resp.StatusCode)
 	}

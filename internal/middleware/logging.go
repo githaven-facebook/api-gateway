@@ -44,10 +44,11 @@ func Logging(logger *zap.Logger) func(http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			start := time.Now()
 			lrw := newLoggingResponseWriter(w)
+			ctx := r.Context()
 
 			defer func() {
 				duration := time.Since(start)
-				route := router.RouteFromContext(r.Context())
+				route := router.RouteFromContext(ctx)
 
 				fields := []zap.Field{
 					zap.String("method", r.Method),
@@ -69,11 +70,12 @@ func Logging(logger *zap.Logger) func(http.Handler) http.Handler {
 					fields = append(fields, zap.String("user_id", userID))
 				}
 
-				if lrw.statusCode >= http.StatusInternalServerError {
+				switch {
+				case lrw.statusCode >= http.StatusInternalServerError:
 					logger.Error("request completed", fields...)
-				} else if lrw.statusCode >= http.StatusBadRequest {
+				case lrw.statusCode >= http.StatusBadRequest:
 					logger.Warn("request completed", fields...)
-				} else {
+				default:
 					logger.Info("request completed", fields...)
 				}
 			}()

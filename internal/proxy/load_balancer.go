@@ -54,8 +54,6 @@ type WeightedBalancer struct {
 	mu      sync.Mutex
 	current int
 	cw      int // current weight
-	gcd     int // greatest common divisor of all weights
-	maxW    int // maximum weight
 }
 
 // NewWeightedBalancer creates a new WeightedBalancer.
@@ -165,6 +163,8 @@ func (l *LeastConnectionsBalancer) Done(instanceID string) {
 // NewLoadBalancer creates a LoadBalancer for the given strategy.
 func NewLoadBalancer(strategy Strategy) LoadBalancer {
 	switch strategy {
+	case StrategyRoundRobin:
+		return NewRoundRobinBalancer()
 	case StrategyWeighted:
 		return NewWeightedBalancer()
 	case StrategyLeastConnections:

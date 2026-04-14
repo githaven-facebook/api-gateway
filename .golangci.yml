@@ -42,6 +42,8 @@ linters-settings:
     local-prefixes: github.com/nicedavid98/api-gateway
   govet:
     enable-all: true
+    disable:
+      - fieldalignment
   revive:
     rules:
       - name: exported

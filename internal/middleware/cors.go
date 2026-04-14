@@ -40,7 +40,7 @@ func DefaultCORSConfig() CORSConfig {
 }
 
 // CORS returns a middleware that adds CORS headers to responses.
-func CORS(cfg CORSConfig) func(http.Handler) http.Handler {
+func CORS(cfg CORSConfig) func(http.Handler) http.Handler { //nolint:gocognit
 	allowedOrigins := make(map[string]bool, len(cfg.AllowedOrigins))
 	allowAll := false
 	for _, o := range cfg.AllowedOrigins {

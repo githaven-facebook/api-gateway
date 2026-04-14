@@ -14,7 +14,7 @@ import (
 // ARGV[2] = refill rate (tokens per second, as float string)
 // ARGV[3] = current time (unix nanoseconds)
 // ARGV[4] = requested tokens
-// Returns: {allowed (0/1), remaining, reset_at (unix seconds)}
+// Returns: [allowed (0/1), remaining, reset_at (unix seconds)].
 const luaAllowScript = `
 local key = KEYS[1]
 local burst = tonumber(ARGV[1])

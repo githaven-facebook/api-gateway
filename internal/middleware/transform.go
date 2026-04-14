@@ -37,10 +37,9 @@ func Transform(next http.Handler) http.Handler {
 		// Wrap response writer to apply response header transformations.
 		if len(t.AddResponseHeaders) > 0 || len(t.RemoveResponseHeaders) > 0 {
 			trw := &transformResponseWriter{
-				ResponseWriter:        w,
-				addHeaders:            t.AddResponseHeaders,
-				removeHeaders:         t.RemoveResponseHeaders,
-				headerTransformDone:   false,
+				ResponseWriter: w,
+				addHeaders:     t.AddResponseHeaders,
+				removeHeaders:  t.RemoveResponseHeaders,
 			}
 			next.ServeHTTP(trw, r)
 			return

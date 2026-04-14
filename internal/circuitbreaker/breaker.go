@@ -60,7 +60,7 @@ func (b *Breaker) Allow() error {
 		return ErrCircuitOpen
 
 	case StateHalfOpen:
-		if b.counts.Requests >= uint32(b.settings.MaxHalfOpenRequests) {
+		if b.counts.Requests >= b.settings.MaxHalfOpenRequests {
 			return ErrCircuitOpen
 		}
 		return nil
@@ -96,6 +96,8 @@ func (b *Breaker) RecordFailure() {
 		}
 	case StateHalfOpen:
 		b.toOpen()
+	case StateOpen:
+		// already open; nothing to do.
 	}
 }
 
